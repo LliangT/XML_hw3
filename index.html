@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>日本歷史悠久的 5 大景點介紹</title>
+  <meta name="description" content="日本 5 大歷史景點介紹：速覽、篩選、排序、細節導覽與地圖連結。" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <a class="skip-link" href="#main">跳到主要內容</a>
+
+  <header class="topbar" role="banner">
+    <div class="container topbar__inner">
+      <div class="brand">
+        <div class="brand__mark" aria-hidden="true">⛩️</div>
+        <div class="brand__text">
+          <div class="brand__title">Japan Heritage</div>
+          <div class="brand__subtitle">五大經典景點精選</div>
+        </div>
+      </div>
+
+      <nav class="topbar__actions" aria-label="工具列">
+        <button id="btnTheme" class="btn btn--ghost" type="button" aria-pressed="false" title="切換深色/淺色">
+          <span class="btn__icon" aria-hidden="true">🌓</span>
+          <span class="btn__text">主題</span>
+        </button>
+
+        <!-- ✅ debug 模式才顯示（一般使用者看不到） -->
+        <button id="btnXml" class="btn btn--ghost" type="button" title="檢視原始資料（Debug）" hidden>
+          <span class="btn__icon" aria-hidden="true">🧾</span>
+          <span class="btn__text">資料</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" aria-label="頁面導覽">
+    <div class="container hero__inner">
+      <div class="hero__copy">
+        <h1 class="hero__title">日本歷史悠久的 5 大景點介紹</h1>
+        <p class="hero__lead">
+          5 個一去就懂日本的經典目的地：<strong>古城、神社、海上鳥居、京都名勝</strong>，
+          幫你用最短時間挑出「最想去的那一個」。
+        </p>
+
+        <!-- ✅ 工具列：移除「搜尋」，改成「景點速覽」 -->
+        <div class="toolbar" role="region" aria-label="篩選與排序">
+          <div class="field">
+            <span class="field__label">景點速覽</span>
+            <div id="quickChips" class="quickstart__chips" role="group" aria-label="五大景點快速開啟"></div>
+            <div class="quickstart__hint">點一下直接開啟詳細介紹（不需要搜尋）</div>
+          </div>
+
+          <label class="field">
+            <span class="field__label">地區</span>
+            <select id="region" class="select">
+              <option value="all">全部</option>
+              <option value="關西">關西</option>
+              <option value="中國">中國</option>
+              <option value="關東">關東</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span class="field__label">排序</span>
+            <select id="sort" class="select">
+              <option value="recommended">推薦順序</option>
+              <option value="establishedAsc">建成年代（舊 → 新）</option>
+              <option value="establishedDesc">建成年代（新 → 舊）</option>
+              <option value="nameAsc">名稱（A → Z）</option>
+            </select>
+          </label>
+
+          <div class="toolbar__meta" aria-live="polite" id="resultMeta"></div>
+        </div>
+      </div>
+
+      <!-- ✅ 右側卡片：旅行靈感（使用者導向） -->
+      <aside class="hero__card" aria-label="旅行靈感與快速推薦">
+        <div class="pill">Travel Guide</div>
+        <h2 class="hero__cardTitle">不知道先去哪？用 10 秒找到你的那一站</h2>
+        <p class="hero__cardDesc">
+          直接點選你今天想看的風格，我會幫你快速篩出最適合的景點。
+        </p>
+
+        <!-- 這裡的 chips 會配合 script.js 做「快速篩選」 -->
+        <div class="chips" role="group" aria-label="快速靈感選擇">
+          <button class="chip" type="button" data-q="世界遺產">世界遺產</button>
+          <button class="chip" type="button" data-q="鳥居隧道">鳥居隧道</button>
+          <button class="chip" type="button" data-q="古城美學">古城美學</button>
+          <button class="chip" type="button" data-q="京都名勝">京都名勝</button>
+          <button class="chip" type="button" data-q="海上鳥居">海上鳥居</button>
+          <button class="chip" type="button" data-q="紅葉">紅葉季</button>
+        </div>
+
+        <div class="hero__cardActions">
+          <button id="btnSurprise" class="btn btn--primary btn--wide" type="button">
+            <span aria-hidden="true">🎲</span> 隨機推薦一個
+          </button>
+          <button id="btnReset" class="btn btn--ghost btn--wide" type="button">
+            <span aria-hidden="true">↺</span> 重置篩選
+          </button>
+        </div>
+
+        <div class="miniPanel" aria-label="今日行程提案">
+          <div class="miniPanel__title">今日行程提案</div>
+          <ul class="miniList">
+            <li>想拍照：傍晚去 <strong>伏見稻荷</strong> → 夜景氛圍超好</li>
+            <li>想浪漫：查潮汐去 <strong>宮島</strong> → 一次看滿潮＋退潮</li>
+            <li>想震撼：上午去 <strong>姬路城</strong> → 光線漂亮、人潮較少</li>
+          </ul>
+        </div>
+
+        <p class="hero__small" id="updatedText">資料載入中…</p>
+      </aside>
+    </div>
+  </section>
+
+  <main id="main" class="container" role="main">
+    <section aria-label="景點列表">
+      <div class="grid" id="grid" aria-live="polite"></div>
+
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__left">
+        <div class="footer__title">Japan Heritage</div>
+        <div class="footer__desc">精選 5 大經典景點 · 友善行動版 · 清楚易讀</div>
+      </div>
+      <div class="footer__right">
+        <span class="footer__tag">Guide-first UX</span>
+        <span class="footer__tag">Quick Navigation</span>
+        <span class="footer__tag">Pure HTML/CSS/JS</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Details Modal -->
+  <dialog class="modal" id="modalDetails" aria-label="景點詳細資訊">
+    <form method="dialog" class="modal__frame">
+      <button class="modal__close" value="close" aria-label="關閉">✕</button>
+      <div class="modal__body" id="modalBody"></div>
+    </form>
+  </dialog>
+
+  <!-- ✅ Debug XML Modal（預設不會開，除非 ?debug=1） -->
+  <dialog class="modal" id="modalXml" aria-label="原始資料檢視（Debug）">
+    <form method="dialog" class="modal__frame modal__frame--wide">
+      <button class="modal__close" value="close" aria-label="關閉">✕</button>
+      <div class="modal__body">
+        <div class="modal__header">
+          <h3 class="modal__title">data.xml（Debug）</h3>
+          <p class="modal__sub">此視窗只在 debug 模式用來對照資料內容，一般使用者不會看到。</p>
+        </div>
+        <pre class="code" id="xmlPretty" tabindex="0"></pre>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="script.js" defer></script>
+</body>
+</html>

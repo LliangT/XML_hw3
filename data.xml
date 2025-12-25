@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<japanHeritage updated="2025-12-25" lang="zh-Hant">
+  <meta>
+    <title>日本歷史悠久的 5 大景點介紹</title>
+    <subtitle>以 XML Viewer 設計模式打造：XML 作為資料來源、前端即時解析渲染</subtitle>
+    <disclaimer>本頁為教學/作業示範；景點敘述為簡化介紹，圖片多取自 Wikimedia Commons（依各圖授權）。</disclaimer>
+  </meta>
+
+  <spots>
+    <spot id="himeji">
+      <name>姬路城</name>
+      <prefecture>兵庫縣・姬路市</prefecture>
+      <region>關西</region>
+      <established year="1333"/>
+      <era>南北朝～江戶</era>
+      <tags>
+        <tag>世界遺產</tag>
+        <tag>現存天守</tag>
+        <tag>白鷺城</tag>
+      </tags>
+      <summary>白壁層疊如羽翼，從遠處望去像白鷺展翅——日本最具代表性的城郭美學。</summary>
+      <story>
+        姬路城以保存完整與防禦動線著稱：曲折的登城路徑、門與櫓的層層設計，
+        讓你一邊「迷路式探索」，一邊感受古城如何以建築說故事。
+      </story>
+      <highlights>
+        <item>天守群與連立式天守：視覺震撼、構造細節豐富</item>
+        <item>登城動線：門、轉折、視線遮蔽的防禦巧思</item>
+        <item>四季景色：櫻花與紅葉季最夢幻</item>
+      </highlights>
+      <tips>
+        <item>建議早上到：光線柔和、人潮相對少</item>
+        <item>穿好走的鞋：城內階梯陡且多</item>
+      </tips>
+      <access>JR「姬路站」步行約 20 分鐘（或搭巴士到大手門前）。</access>
+      <bestTime>春（櫻）／秋（紅葉）</bestTime>
+      <links>
+        <map>https://www.google.com/maps?q=Himeji%20Castle</map>
+        <source>Wikimedia Commons</source>
+      </links>
+      <images>
+        <hero credit="KENPEI / CC BY-SA 2.1 JP">https://commons.wikimedia.org/wiki/Special:FilePath/Himeji%20castle-Daitensyu.jpg</hero>
+        <gallery>
+          <img credit="KENPEI / CC BY-SA 2.1 JP">https://commons.wikimedia.org/wiki/Special:FilePath/Himeji%20castle-InuiShotenshu%2BNishiShotenshu-focused-right.jpg</img>
+        </gallery>
+      </images>
+    </spot>
+
+    <spot id="kiyomizudera">
+      <name>清水寺</name>
+      <prefecture>京都府・東山</prefecture>
+      <region>關西</region>
+      <established year="778"/>
+      <era>奈良～江戶</era>
+      <tags>
+        <tag>世界遺產</tag>
+        <tag>清水舞台</tag>
+        <tag>古都風景</tag>
+      </tags>
+      <summary>站上「清水舞台」，整座京都像被緩慢展開的畫卷：屋瓦、山稜與季節色彩交疊。</summary>
+      <story>
+        清水寺的魅力不只在於舞台本身，更在於「走進東山」：石板路、町家、
+        轉角一間和菓子店——旅行的節奏被自然而然放慢。
+      </story>
+      <highlights>
+        <item>清水舞台：俯瞰京都、感受木構造之美</item>
+        <item>東山散策：二年坂、三年坂一路逛到心動</item>
+        <item>夜間特別參拜（季節限定）：燈光把古寺變成電影場景</item>
+      </highlights>
+      <tips>
+        <item>傍晚更有氛圍：夕光＋人潮相對舒適</item>
+        <item>雨天也值得：濕潤石板路＋霧氣很有京都感</item>
+      </tips>
+      <access>從京都車站搭巴士至「五條坂／清水道」再步行上坡。</access>
+      <bestTime>春／秋（夜間特別參拜常見於此兩季）</bestTime>
+      <links>
+        <map>https://www.google.com/maps?q=Kiyomizu-dera</map>
+        <source>Wikimedia Commons</source>
+      </links>
+      <images>
+        <hero credit="Basile Morin / CC BY-SA">https://commons.wikimedia.org/wiki/Special:FilePath/Kiyomizu-dera%2C%20Kyoto%2C%20November%202016%20-01.jpg</hero>
+        <gallery>
+          <img credit="Andy king50 / CC BY-SA">https://commons.wikimedia.org/wiki/Special:FilePath/Kiyomizu-dera%20beams1.JPG</img>
+        </gallery>
+      </images>
+    </spot>
+
+    <spot id="fushimiinari">
+      <name>伏見稻荷大社</name>
+      <prefecture>京都府・伏見</prefecture>
+      <region>關西</region>
+      <established year="711"/>
+      <era>奈良～現代</era>
+      <tags>
+        <tag>千本鳥居</tag>
+        <tag>稻荷信仰</tag>
+        <tag>日夜皆美</tag>
+      </tags>
+      <summary>橘紅鳥居像一條通往山林深處的光之隧道，越走越安靜，越走越上癮。</summary>
+      <story>
+        伏見稻荷最迷人的地方，是它的「層次」：入口熱鬧、越往上越清幽。
+        你可以把它當成散步、健行，甚至是一場心情整理的旅程。
+      </story>
+      <highlights>
+        <item>千本鳥居：線條感極強、怎麼拍都像海報</item>
+        <item>山路小社：轉角總會遇到可愛的狐狸與奉納鳥居</item>
+        <item>黃昏～夜晚：燈籠亮起時的氛圍特別迷人</item>
+      </highlights>
+      <tips>
+        <item>避開中午尖峰：清晨或傍晚最舒服</item>
+        <item>想輕鬆拍照：從「奧社奉拜所」附近取景很漂亮</item>
+      </tips>
+      <access>JR「稻荷站」出站即達（或京阪「伏見稻荷站」步行約 5 分鐘）。</access>
+      <bestTime>全年皆宜（清晨／黃昏最推薦）</bestTime>
+      <links>
+        <map>https://www.google.com/maps?q=Fushimi%20Inari%20Taisha</map>
+        <source>Wikimedia Commons</source>
+      </links>
+      <images>
+        <hero credit="nakae / CC BY 2.0">https://commons.wikimedia.org/wiki/Special:FilePath/Fushimi%20Inari%20shrine.jpg</hero>
+      </images>
+    </spot>
+
+    <spot id="itsukushima">
+      <name>嚴島神社（宮島）</name>
+      <prefecture>廣島縣・廿日市市</prefecture>
+      <region>中國</region>
+      <established year="593"/>
+      <era>飛鳥～現代</era>
+      <tags>
+        <tag>海上鳥居</tag>
+        <tag>世界遺產</tag>
+        <tag>潮汐景觀</tag>
+      </tags>
+      <summary>海面上的朱紅鳥居，潮起潮落時會變成兩種風景：漂浮的神域與可步行的奇景。</summary>
+      <story>
+        宮島的浪漫在於「時間」：你會想查潮汐、想等夕陽、想把同一個景拍兩次。
+        這裡很容易讓人忘記趕行程，只想好好停留。
+      </story>
+      <highlights>
+        <item>海上大鳥居：滿潮與退潮各有魅力</item>
+        <item>回廊與神社建築：像漂浮在海面上的舞台</item>
+        <item>表參道商店街：邊走邊吃，旅行幸福感拉滿</item>
+      </highlights>
+      <tips>
+        <item>務必查潮汐：安排「滿潮＋退潮」各看一次</item>
+        <item>傍晚很美：夕陽把海面鍍成金色</item>
+      </tips>
+      <access>廣島市區 → 宮島口 → 渡輪至宮島，步行可達。</access>
+      <bestTime>全年皆宜（看潮汐）</bestTime>
+      <links>
+        <map>https://www.google.com/maps?q=Itsukushima%20Shrine</map>
+        <source>Wikimedia Commons</source>
+      </links>
+      <images>
+        <hero credit="redlegsfan21 / CC BY-SA 2.0">https://commons.wikimedia.org/wiki/Special:FilePath/Itsukushima%20Shrine%20Torii%20Gate%20%2813890465459%29.jpg</hero>
+        <gallery>
+          <img credit="Wikimedia Commons">https://commons.wikimedia.org/wiki/Special:FilePath/Itsukushima%20Gate.jpg</img>
+        </gallery>
+      </images>
+    </spot>
+
+    <spot id="nikkotoshogu">
+      <name>日光東照宮（陽明門）</name>
+      <prefecture>栃木縣・日光</prefecture>
+      <region>關東</region>
+      <established year="1617"/>
+      <era>江戶</era>
+      <tags>
+        <tag>華麗雕刻</tag>
+        <tag>世界遺產</tag>
+        <tag>陽明門</tag>
+      </tags>
+      <summary>金與彩繪、繁複雕刻與工藝細節堆疊到極致——「看一整天也不膩」的門，真的名不虛傳。</summary>
+      <story>
+        東照宮的魅力是「密度」：每一寸都在講故事。
+        你不需要懂建築術語，只要靠近看，就會被細節抓住視線。
+      </story>
+      <highlights>
+        <item>陽明門：雕刻密度驚人，被稱為「日暮門」</item>
+        <item>整體社殿群：色彩、金箔與構造細節豐富</item>
+        <item>杉木林步道：從自然過渡到神域的儀式感</item>
+      </highlights>
+      <tips>
+        <item>建議預留時間慢慢看：這裡最不適合「快閃」</item>
+        <item>陰天反而漂亮：金箔與色彩更顯層次</item>
+      </tips>
+      <access>東京出發：到日光後轉巴士至「東照宮」周邊，步行進入參道。</access>
+      <bestTime>秋（紅葉）／冬（冷冽空氣讓色彩更銳利）</bestTime>
+      <links>
+        <map>https://www.google.com/maps?q=Nikko%20Toshogu</map>
+        <source>Wikimedia Commons</source>
+      </links>
+      <images>
+        <hero credit="Jpatokal / CC BY-SA">https://commons.wikimedia.org/wiki/Special:FilePath/Nikko%20Toshogu%20Yomeimon%20Gate%202024.jpg</hero>
+      </images>
+    </spot>
+  </spots>
+</japanHeritage>
