@@ -2,8 +2,8 @@
   --bg: #0b0d12;
   --panel: rgba(255,255,255,0.06);
   --panel2: rgba(255,255,255,0.08);
-  --text: rgba(255,255,255,0.92);
-  --muted: rgba(255,255,255,0.70);
+  --text: rgba(255,255,255,0.95);
+  --muted: rgba(255,255,255,0.75);
   --faint: rgba(255,255,255,0.55);
   --border: rgba(255,255,255,0.12);
   --shadow: 0 16px 50px rgba(0,0,0,0.45);
@@ -18,19 +18,25 @@
 
   --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", Arial, sans-serif;
   --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  
+  /* Modal 專用背景色 */
+  --modal-bg: rgba(17, 24, 39, 0.98); 
 }
 
 [data-theme="light"]{
   --bg: #f6f7fb;
   --panel: rgba(0,0,0,0.04);
   --panel2: rgba(0,0,0,0.06);
-  --text: rgba(0,0,0,0.88);
-  --muted: rgba(0,0,0,0.65);
+  --text: rgba(0,0,0,0.92);
+  --muted: rgba(0,0,0,0.70);
   --faint: rgba(0,0,0,0.52);
   --border: rgba(0,0,0,0.10);
   --shadow: 0 18px 50px rgba(0,0,0,0.10);
   --shadow2: 0 10px 30px rgba(0,0,0,0.08);
   --focus: rgba(59, 130, 246, 0.35);
+  
+  /* Modal 專用背景色 (純白) */
+  --modal-bg: #ffffff;
 }
 
 *{ box-sizing:border-box; }
@@ -47,7 +53,7 @@ body{
 }
 
 a{ color:inherit; }
-strong{ font-weight:700; }
+strong{ font-weight:700; color: var(--text); }
 
 .container{
   width:min(var(--max), calc(100% - 40px));
@@ -62,6 +68,7 @@ strong{ font-weight:700; }
   border:1px solid var(--border);
   padding:10px 12px;
   border-radius:12px;
+  z-index: 100;
 }
 .skip-link:focus{ left:12px; outline:3px solid var(--focus); }
 
@@ -70,11 +77,11 @@ strong{ font-weight:700; }
   top:0;
   z-index:20;
   backdrop-filter: blur(12px);
-  background: linear-gradient(to bottom, rgba(0,0,0,0.35), rgba(0,0,0,0.08));
+  background: linear-gradient(to bottom, rgba(0,0,0,0.65), rgba(0,0,0,0.2));
   border-bottom:1px solid var(--border);
 }
 [data-theme="light"] .topbar{
-  background: linear-gradient(to bottom, rgba(255,255,255,0.75), rgba(255,255,255,0.55));
+  background: linear-gradient(to bottom, rgba(255,255,255,0.85), rgba(255,255,255,0.65));
 }
 
 .topbar__inner{
@@ -168,43 +175,91 @@ strong{ font-weight:700; }
 }
 .hero__hint{ color:var(--faint); }
 
+/* =========================================
+   Toolbar & Inputs (Fixed)
+   ========================================= */
 .toolbar{
   position:relative;
   display:grid;
   grid-template-columns: 1.3fr 0.7fr 0.7fr;
-  gap:12px;
-  margin-top:14px;
+  gap:16px;
+  margin-top:24px;
+  background: transparent;
+  border: none;
+  padding: 0;
 }
 @media (max-width: 720px){
   .toolbar{ grid-template-columns: 1fr; }
 }
 
-.field{ display:flex; flex-direction:column; gap:7px; }
+.field{ display:flex; flex-direction:column; gap:8px; }
 .field__label{
-  font-size:12px;
-  color:var(--faint);
-  letter-spacing:0.2px;
+  font-size:13px;
+  color:var(--muted);
+  letter-spacing:0.5px;
+  font-weight: 600;
+  margin-left: 4px;
 }
+
+/* 輸入框樣式 */
 .input,.select{
   border:1px solid var(--border);
-  border-radius: 14px;
-  padding:12px 12px;
-  background: rgba(0,0,0,0.18);
+  border-radius: 16px;
+  padding:12px 16px;
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(10px);
   color:var(--text);
   outline:none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  font-size: 14px;
 }
+
 [data-theme="light"] .input,
 [data-theme="light"] .select{
-  background: rgba(255,255,255,0.8);
+  background: rgba(255,255,255,0.6);
+  border-color: rgba(0,0,0,0.1);
 }
-.input:focus,.select:focus{ outline:3px solid var(--focus); }
+
+.input:hover, .select:hover{
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.3);
+}
+[data-theme="light"] .input:hover, 
+[data-theme="light"] .select:hover{
+  background: rgba(255,255,255,0.9);
+}
+
+.input:focus, .select:focus{ 
+  outline:none;
+  border-color: var(--accent);
+  background: rgba(255,255,255,0.15);
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25);
+}
+
+/* ✅ 修正重點：強制設定 option 背景色與文字顏色 */
+.select option {
+    background-color: #17171f; /* 深色背景 */
+    color: #ffffff;            /* 白色文字 */
+}
+
+/* 淺色模式下 option 的修正 */
+[data-theme="light"] .select option {
+    background-color: #ffffff;
+    color: #0f172a;
+}
 
 .toolbar__meta{
   grid-column: 1 / -1;
-  margin-top:2px;
+  margin-top:4px;
   font-size:12.5px;
   color:var(--faint);
+  margin-left: 4px;
 }
+
+/* =========================================
+   End Toolbar
+   ========================================= */
 
 .hero__card{
   padding:22px;
@@ -410,43 +465,56 @@ strong{ font-weight:700; }
   border-radius: 999px;
 }
 
-/* Modal */
+/* =========================================
+   Modal
+   ========================================= */
 .modal::backdrop{
-  background: rgba(0,0,0,0.55);
+  background: rgba(0,0,0,0.8);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
+[data-theme="light"] .modal::backdrop{
+  background: rgba(0,0,0,0.6);
+}
+
 .modal{
   border:none;
   padding:0;
   background: transparent;
 }
+
 .modal__frame{
   width:min(920px, calc(100vw - 24px));
   margin: 8vh auto;
   border-radius: var(--radius2);
   border:1px solid var(--border);
-  background: linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
-  box-shadow: var(--shadow);
+  background: var(--modal-bg);
+  box-shadow: 0 24px 80px rgba(0,0,0,0.65);
   position:relative;
   overflow:hidden;
 }
-[data-theme="light"] .modal__frame{
-  background: linear-gradient(145deg, rgba(255,255,255,0.92), rgba(255,255,255,0.65));
-}
+
 .modal__frame--wide{ width:min(1100px, calc(100vw - 24px)); }
+
 .modal__close{
   position:absolute;
   top:10px; right:10px;
   width:38px; height:38px;
   border-radius: 14px;
   border:1px solid var(--border);
-  background: var(--panel);
+  background: rgba(0,0,0,0.2);
   color:var(--text);
   cursor:pointer;
+  z-index: 10;
+}
+[data-theme="light"] .modal__close {
+  background: rgba(0,0,0,0.05);
 }
 .modal__close:focus{ outline:3px solid var(--focus); outline-offset:2px; }
 
 .modal__body{
   padding:18px;
+  background: transparent;
 }
 .modal__header{
   padding:6px 6px 14px;
@@ -455,6 +523,7 @@ strong{ font-weight:700; }
   margin:0 0 6px;
   font-size:18px;
   letter-spacing:0.2px;
+  color: var(--text);
 }
 .modal__sub{
   margin:0;
@@ -489,21 +558,38 @@ strong{ font-weight:700; }
   color:var(--muted);
   font-size:13px;
 }
+
 .details__name{
   margin:0;
   font-size:24px;
   letter-spacing:0.2px;
+  color: var(--text);
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
+[data-theme="light"] .details__name{
+  text-shadow: none;
+}
+
 .details__text{
   margin:0;
   color:var(--muted);
   font-size:14px;
+  line-height: 1.6;
 }
+
+.details__right h3.modal__title {
+    color: var(--text);
+    font-weight: 700;
+    margin-top: 12px;
+}
+
 .details__list{
   margin:0;
   padding-left:18px;
   color:var(--muted);
   font-size:13.5px;
+  line-height: 1.6;
 }
 .details__cta{
   display:flex;
@@ -531,17 +617,17 @@ strong{ font-weight:700; }
   padding:14px;
   border-radius: var(--radius2);
   border:1px solid var(--border);
-  background: rgba(0,0,0,0.25);
+  background: rgba(0,0,0,0.85);
   overflow:auto;
   white-space: pre;
-  color: rgba(255,255,255,0.88);
+  color: #e2e8f0;
 }
 [data-theme="light"] .code{
-  background: rgba(0,0,0,0.06);
-  color: rgba(0,0,0,0.85);
+  background: #f1f5f9;
+  color: #0f172a;
 }
 
-/* ====== Travel Inspiration Panel (user-first) ====== */
+/* ====== Travel Inspiration Panel ====== */
 .hero__cardDesc{
   margin: 0 0 12px;
   color: var(--muted);
@@ -619,7 +705,7 @@ strong{ font-weight:700; }
 }
 .miniList strong{ color: var(--text); }
 
-/* ====== Quick Chips (replace search) ====== */
+/* ====== Quick Chips ====== */
 .quickstart__chips{
   display:flex;
   flex-wrap:wrap;
@@ -632,7 +718,6 @@ strong{ font-weight:700; }
   color:var(--faint);
 }
 
-/* reuse chip look but make it slightly more “navigation” */
 .quickstart__chips .chip,
 .quickchip{
   appearance:none;
@@ -671,109 +756,9 @@ strong{ font-weight:700; }
   background: linear-gradient(145deg, rgba(56,189,248,0.22), rgba(244,114,182,0.14));
 }
 
-/* =========================
-   Modal clarity fix (dialog)
-   ========================= */
-
-/* 1) dialog 本體透明即可，但內容框要不透明 */
-.modal{
-  border: none;
-  padding: 0;
-  background: transparent;
-}
-
-/* 2) 關鍵：背板加深 + 模糊，避免背景穿透造成雜亂 */
-.modal::backdrop{
-  background: rgba(0,0,0,0.68);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-}
-
-/* 3) modal 框：改成「不透明」的乾淨面板 */
-.modal__frame{
-  background: var(--panel, #111827); /* 若你沒定義 --panel，也有 fallback */
-  border: 1px solid var(--border, rgba(255,255,255,0.14));
-  box-shadow: 0 24px 80px rgba(0,0,0,0.55);
-  border-radius: 18px;
-  overflow: hidden; /* 避免圖片或內容溢出 */
-}
-
-/* 4) 內容區確保不透明 */
-.modal__body{
-  background: transparent; /* 讓 frame 的不透明背景統一控制 */
-}
-
-/* 5) （可選）亮色主題時背板別太黑 */
-[data-theme="light"] .modal::backdrop{
-  background: rgba(0,0,0,0.45);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-
-[data-theme="light"] .modal__frame{
-  background: var(--panel, #ffffff);
-  border: 1px solid var(--border, rgba(0,0,0,0.12));
-  box-shadow: 0 24px 70px rgba(0,0,0,0.25);
-}
-
-/* =========================
-   Fix: remove visible background seam
-   Make ONE global background for the whole page
-   ========================= */
-
-/* 1) 全站只用同一個背景（放在 body，固定不跟著 section 變） */
-html, body {
-  height: 100%;
-}
-
-body {
-  background-color: #070a0f !important;
-  background-image:
-    radial-gradient(1200px 700px at 20% 15%, rgba(56,189,248,0.16), rgba(0,0,0,0) 55%),
-    radial-gradient(1000px 650px at 85% 30%, rgba(244,114,182,0.14), rgba(0,0,0,0) 60%),
-    radial-gradient(900px 600px at 65% 90%, rgba(52,211,153,0.10), rgba(0,0,0,0) 60%),
-    linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.0) 45%, rgba(0,0,0,0.10));
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-attachment: fixed; /* ✅ 避免滾動時不同區塊背景接縫 */
-}
-
-/* 2) 讓各 section 不要再自己畫背景（避免上下兩套背景接起來） */
-.hero,
-main,
-.footer,
-.container {
-  background: transparent !important;
-}
-
-/* 3) 如果你的 hero 有用 ::before/::after 畫背景，這兩行可把它們關掉（避免斷層） */
-.hero::before,
-.hero::after {
-  background: none !important;
-}
-
-/* 4) （加分）用一點點雜訊抹平 gradient banding（可留可不留） */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.06;
-  background-image: url("data:image/svg+xml;utf8,\
-<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'>\
-<filter id='n'>\
-<feTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/>\
-</filter>\
-<rect width='100%25' height='100%25' filter='url(%23n)'/>\
-</svg>");
-  background-size: 160px 160px;
-  mix-blend-mode: overlay;
-}
-
-/* =========================
-   Theme tokens + background (fix theme color mismatch)
-   貼在 styles.css 最後面
-   ========================= */
+/* =========================================
+   Theme tokens + Background Handling
+   ========================================= */
 
 /* Dark (default) */
 :root{
@@ -810,7 +795,6 @@ body[data-theme="light"]{
   --focus: rgba(59,130,246,0.45);
 }
 
-/* ✅ 全站用同一個背景（不再用硬寫死的 !important 深色背景） */
 html, body { height: 100%; }
 
 body{
@@ -826,29 +810,25 @@ body{
   background-attachment: fixed;
 }
 
-/* ✅ 你的區塊不要各自再畫一套背景（避免切主題後顏色混雜） */
 .hero, main, .footer, .container { background: transparent; }
 
-/* ✅ 面板/卡片統一吃變數（亮暗才會一起換） */
+/* 元件顏色綁定 */
 .topbar{ background: var(--panel); border-bottom: 1px solid var(--border); }
-.hero__copy, .hero__card, .toolbar, .card, .modal__frame{
+.hero__copy, .hero__card, .card{
   background: var(--panel);
   border: 1px solid var(--border);
 }
 
-/* ✅ 表單元件（select）亮暗一致 */
+/* 修正輸入框背景，確保在透明 Toolbar 上清楚可見 */
 .select, .input{
-  background: var(--panel2);
-  color: var(--text);
   border: 1px solid var(--border);
 }
 
-/* ✅ 小字顏色 */
 .hero__lead, .hero__cardDesc, .quickstart__hint, .miniList, .card__summary{
   color: var(--muted);
 }
 
-/* ✅ 噪點：亮色模式太「灰」就降低（避免你截圖那種灰霧感） */
+/* Noise texture */
 body::before{
   content:"";
   position: fixed;
@@ -856,17 +836,11 @@ body::before{
   pointer-events:none;
   opacity: 0.06;
   mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml;utf8,\
-<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'>\
-<filter id='n'>\
-<feTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/>\
-</filter>\
-<rect width='100%25' height='100%25' filter='url(%23n)'/>\
-</svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
   background-size: 160px 160px;
 }
 html[data-theme="light"] body::before,
 body[data-theme="light"]::before{
-  opacity: 0.03;          /* 亮色降低噪點濃度 */
+  opacity: 0.03;
   mix-blend-mode: multiply;
 }

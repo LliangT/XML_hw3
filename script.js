@@ -1,11 +1,8 @@
 /* ==========
-   User-first Travel UI (no search needed for only 5 spots)
-   - data.xml  : data source (hidden from normal users)
+   User-first Travel UI (Modified for XML Showcase)
+   - data.xml  : data source
    - parse     : XML -> Model
-   - render    : Model -> UI (cards + dialogs)
-   - quick nav : "景點速覽" chips (open details directly)
-   - quick filter chips (world heritage / torii / etc.) without text search
-   - debug     : add ?debug=1 to show XML button + XML viewer dialog
+   - render    : Model -> UI
    ========== */
 
 const state = {
@@ -13,7 +10,7 @@ const state = {
   meta: { updated: "", title: "", subtitle: "" },
   spots: [],
   filtered: [],
-  activeFilterKey: null, // from right-side chips (e.g., "世界遺產")
+  activeFilterKey: null,
 };
 
 const els = {
@@ -25,10 +22,10 @@ const els = {
 
   btnTheme: document.getElementById("btnTheme"),
 
-  // Quick open chips (replace search)
+  // Quick open chips
   quickChips: document.getElementById("quickChips"),
 
-  // Debug UI (hidden by default)
+  // XML Viewer UI (Now active for all users)
   btnXml: document.getElementById("btnXml"),
   modalXml: document.getElementById("modalXml"),
   xmlPretty: document.getElementById("xmlPretty"),
@@ -37,18 +34,19 @@ const els = {
   modalDetails: document.getElementById("modalDetails"),
   modalBody: document.getElementById("modalBody"),
 
-  // Travel inspiration panel (optional)
+  // Travel inspiration panel
   btnSurprise: document.getElementById("btnSurprise"),
   btnReset: document.getElementById("btnReset"),
 };
 
+// 保留 debug 參數供進階開發使用，但 XML 檢視器現在對所有用戶開放
 const isDebug = new URLSearchParams(location.search).has("debug");
 
 init().catch((err) => {
   console.error(err);
   if (els.resultMeta) {
     els.resultMeta.textContent =
-      "載入失敗：請用 http://localhost 方式開啟（不要用 file://），並確認 data.xml 與檔名正確。";
+      "載入失敗：請用 http://localhost 方式開啟，並確認 data.xml 正確。";
   }
 });
 
@@ -56,28 +54,26 @@ async function init() {
   applySavedTheme();
   bindEvents();
 
+  // 1. 載入 XML
   const { xmlText, xmlDoc } = await loadXml("data.xml");
   state.xmlText = xmlText;
 
+  // 2. 解析 XML
   const model = parseXmlToModel(xmlDoc);
   state.meta = model.meta;
   state.spots = model.spots;
 
-  // ✅ User-first: only show updated date (no mention of XML)
   if (els.updatedText) els.updatedText.textContent = `資料更新：${state.meta.updated || "未知"}`;
 
-  // ✅ Debug only: show XML viewer
-  if (isDebug && els.btnXml && els.modalXml && els.xmlPretty) {
-    els.btnXml.hidden = false;
+  // ✅ 修改：不再檢查 isDebug，直接將 XML 內容填入檢視器
+  if (els.xmlPretty) {
     els.xmlPretty.textContent = prettyXml(xmlText);
-  } else {
-    if (els.btnXml) els.btnXml.hidden = true;
   }
 
-  // ✅ Build quick-open chips (5 spots)
+  // 3. 建立快速選單
   buildQuickChips();
 
-  // initial
+  // 4. 初始渲染
   state.filtered = [...state.spots];
   render();
 }
@@ -97,19 +93,17 @@ function bindEvents() {
 
   els.btnTheme?.addEventListener("click", toggleTheme);
 
-  // Debug: open XML modal
-  if (isDebug && els.btnXml && els.modalXml) {
+  // ✅ 修改：不再檢查 isDebug，直接綁定「原始資料」按鈕點擊事件
+  if (els.btnXml && els.modalXml) {
     els.btnXml.addEventListener("click", () => els.modalXml.showModal());
   }
 
-  // Right-side chips as quick filters (no search)
-  // Accept both data-tag / data-q / or fallback to button text
+  // Chips click (Quick Filter)
   document.querySelectorAll(".chip").forEach((btn) => {
     btn.addEventListener("click", () => {
       const key = (btn.getAttribute("data-tag") || btn.getAttribute("data-q") || btn.textContent || "").trim();
       if (!key) return;
 
-      // toggle behavior
       if (state.activeFilterKey === key) {
         state.activeFilterKey = null;
       } else {
@@ -123,10 +117,9 @@ function bindEvents() {
     });
   });
 
-  // Surprise pick: pick from current filtered list if possible
+  // Surprise pick
   els.btnSurprise?.addEventListener("click", () => {
     if (!state.spots.length) return;
-
     applyFilters();
     const pool = state.filtered.length ? state.filtered : state.spots;
     const pick = pool[Math.floor(Math.random() * pool.length)];
@@ -152,7 +145,7 @@ function updateChipActiveState() {
 }
 
 /* =======================
-   Quick-open chips (replace search)
+   Quick-open chips
    ======================= */
 
 function buildQuickChips() {
@@ -187,7 +180,7 @@ function applyFilters() {
     list = list.filter((s) => s.region === region);
   }
 
-  // quick filter key (from chips) - no text search, just curated mapping
+  // quick filter key
   if (state.activeFilterKey) {
     list = list.filter((s) => matchQuickFilter(s, state.activeFilterKey));
   }
@@ -199,7 +192,6 @@ function applyFilters() {
 }
 
 function matchQuickFilter(spot, key) {
-  // These rules are "curated" instead of text-search, suitable for only 5 spots.
   const tags = new Set(spot.tags || []);
   const name = spot.name || "";
   const pref = spot.prefecture || "";
@@ -220,7 +212,6 @@ function matchQuickFilter(spot, key) {
     case "紅葉":
       return (spot.bestTime || "").includes("秋");
     default:
-      // fallback: if someone puts custom chip label equal to a tag
       return tags.has(key);
   }
 }
@@ -278,7 +269,6 @@ function renderCard(spot) {
   img.loading = "lazy";
   img.alt = `${spot.name} 圖片`;
   img.referrerPolicy = "no-referrer";
-
   img.src = withWidth(spot.hero, 1200);
 
   img.addEventListener("load", () => img.classList.add("is-loaded"));
@@ -289,7 +279,6 @@ function renderCard(spot) {
 
   const shade = el("div", "media__shade");
   const badges = el("div", "badges");
-
   const b1 = badge(`${spot.region || "—"}`, false);
   const b2 = badge(`${spot.bestTime || "全年皆宜"}`, true);
   badges.append(b1, b2);
@@ -298,7 +287,6 @@ function renderCard(spot) {
 
   // Body
   const body = el("div", "card__body");
-
   const title = el("h3", "card__title", spot.name);
   const meta = el("div", "card__meta");
   meta.append(
@@ -310,7 +298,6 @@ function renderCard(spot) {
   );
 
   const summary = el("p", "card__summary", spot.summary || "");
-
   const tagrow = el("div", "tagrow");
   (spot.tags || []).slice(0, 3).forEach((t) => tagrow.appendChild(el("span", "tag", t)));
 
@@ -319,7 +306,6 @@ function renderCard(spot) {
   const btnMap = linkButton(spot.map, "開啟地圖");
 
   btnDetails.addEventListener("click", () => openDetails(spot));
-
   card.addEventListener("keydown", (e) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
@@ -328,7 +314,6 @@ function renderCard(spot) {
   });
 
   actions.append(btnDetails, btnMap);
-
   body.append(title, meta, summary, tagrow, actions);
   card.append(media, body);
 
@@ -359,7 +344,6 @@ function renderDetails(spot) {
   left.appendChild(img);
 
   const right = el("div", "details__right");
-
   const kicker = el("div", "details__kicker");
   kicker.append(
     spanText(spot.prefecture || "—"),
@@ -373,7 +357,6 @@ function renderDetails(spot) {
   const story = el("p", "details__text", spot.story || "");
 
   const hlTitle = el("h3", "modal__title", "亮點");
-  hlTitle.style.marginTop = "6px";
   const hlList = el("ul", "details__list");
   (spot.highlights || []).forEach((t) => {
     const li = document.createElement("li");
@@ -382,7 +365,6 @@ function renderDetails(spot) {
   });
 
   const tipsTitle = el("h3", "modal__title", "小提醒");
-  tipsTitle.style.marginTop = "8px";
   const tipsList = el("ul", "details__list");
   (spot.tips || []).forEach((t) => {
     const li = document.createElement("li");
@@ -402,9 +384,10 @@ function renderDetails(spot) {
     makeMiniButton("複製景點資訊", () => copyText(makeSpotText(spot)))
   );
 
+  // Debug 按鈕（針對單一景點），這裡保留檢查 isDebug，只在開發模式顯示
   if (isDebug && els.modalXml && els.xmlPretty) {
     cta.append(
-      makeMiniButton("檢視此景點資料（Debug）", () => {
+      makeMiniButton("Debug: 檢視此點 XML", () => {
         els.modalDetails?.close();
         els.modalXml?.showModal();
         scrollToXmlId(spot.id);
@@ -418,7 +401,7 @@ function renderDetails(spot) {
 }
 
 /* =======================
-   XML Load + Parse (Model)
+   XML Load + Parse
    ======================= */
 
 async function loadXml(url) {
@@ -428,9 +411,8 @@ async function loadXml(url) {
 
   const parser = new DOMParser();
   const xmlDoc = parser.parseFromString(xmlText, "application/xml");
-
   const errNode = xmlDoc.querySelector("parsererror");
-  if (errNode) throw new Error("XML 解析失敗：請檢查 data.xml 格式是否正確。");
+  if (errNode) throw new Error("XML 解析失敗。");
 
   return { xmlText, xmlDoc };
 }
@@ -445,15 +427,12 @@ function parseXmlToModel(xmlDoc) {
   const spots = [...xmlDoc.querySelectorAll("spots > spot")].map((node) => {
     const establishedNode = node.querySelector("established");
     const year = establishedNode ? parseInt(establishedNode.getAttribute("year") || "", 10) : null;
-
     const tags = [...node.querySelectorAll("tags > tag")].map((n) => n.textContent.trim());
     const highlights = [...node.querySelectorAll("highlights > item")].map((n) => n.textContent.trim());
     const tips = [...node.querySelectorAll("tips > item")].map((n) => n.textContent.trim());
-
     const heroNode = node.querySelector("images > hero");
     const hero = heroNode ? heroNode.textContent.trim() : "";
     const credit = heroNode ? (heroNode.getAttribute("credit") || "").trim() : "";
-
     const map = text(node.querySelector("links > map"));
     const source = text(node.querySelector("links > source")) || "Wikimedia Commons";
 
@@ -486,13 +465,12 @@ function text(node) {
 }
 
 /* =======================
-   Theme
+   Theme & Utilities
    ======================= */
 
 function setTheme(mode) {
-  const root = document.documentElement; // <html>
-  const body = document.body;            // <body>
-
+  const root = document.documentElement;
+  const body = document.body;
   if (mode === "light") {
     root.setAttribute("data-theme", "light");
     body && body.setAttribute("data-theme", "light");
@@ -512,109 +490,64 @@ function applySavedTheme() {
 }
 
 function toggleTheme() {
-  const isLight =
-    document.documentElement.getAttribute("data-theme") === "light" ||
-    document.body?.getAttribute("data-theme") === "light";
+  const isLight = document.documentElement.getAttribute("data-theme") === "light";
   setTheme(isLight ? "dark" : "light");
 }
 
-
-/* =======================
-   Utilities
-   ======================= */
-
+/* Helpers */
 function el(tag, className, textContent) {
   const node = document.createElement(tag);
   if (className) node.className = className;
   if (typeof textContent === "string") node.textContent = textContent;
   return node;
 }
-
-function spanText(t) {
-  const s = document.createElement("span");
-  s.textContent = t;
-  return s;
-}
-
-function metaDot() {
-  const s = document.createElement("span");
-  s.className = "meta-dot";
-  return s;
-}
-
+function spanText(t) { return el("span", "", t); }
+function metaDot() { return el("span", "meta-dot", ""); }
 function badge(text, ok) {
-  const b = document.createElement("span");
-  b.className = "badge" + (ok ? " badge--ok" : "");
-  b.textContent = text;
+  const b = el("span", "badge" + (ok ? " badge--ok" : ""), text);
   return b;
 }
-
-function button(className, text) {
-  const b = document.createElement("button");
-  b.type = "button";
-  b.className = className;
-  b.textContent = text;
-  return b;
-}
-
+function button(className, text) { return el("button", className, text); }
 function linkButton(href, text) {
-  const a = document.createElement("a");
-  a.className = "linkbtn";
+  const a = el("a", "linkbtn", text);
   a.href = href || "#";
   a.target = "_blank";
   a.rel = "noreferrer noopener";
-  a.textContent = text;
-  a.setAttribute("aria-label", text);
   if (!href) {
     a.addEventListener("click", (e) => e.preventDefault());
     a.style.opacity = "0.6";
   }
   return a;
 }
-
 function makeMiniButton(text, onClick) {
   const b = button("btn btn--mini", text);
   b.addEventListener("click", onClick);
   return b;
 }
-
 function withWidth(url, w) {
   if (!url) return "";
   try {
     const u = new URL(url, window.location.href);
     u.searchParams.set("width", String(w));
     return u.toString();
-  } catch {
-    return url;
-  }
+  } catch { return url; }
 }
 
-/* =======================
-   Debug helpers
-   ======================= */
-
+/* Pretty XML */
 function prettyXml(xml) {
   const PADDING = "  ";
   const reg = /(>)(<)(\/*)/g;
   let formatted = "";
   let pad = 0;
-
   xml = xml.replace(/\r\n/g, "\n").replace(reg, "$1\n$2$3");
   xml.split("\n").forEach((node) => {
     let indent = 0;
-    if (node.match(/.+<\/\w[^>]*>$/)) {
-      indent = 0;
-    } else if (node.match(/^<\/\w/)) {
-      if (pad !== 0) pad -= 1;
-    } else if (node.match(/^<\w([^>]*[^/])?>.*$/)) {
-      indent = 1;
-    } else {
-      indent = 0;
-    }
+    if (node.match(/.+<\/\w[^>]*>$/)) indent = 0;
+    else if (node.match(/^<\/\w/)) { if (pad !== 0) pad -= 1; }
+    else if (node.match(/^<\w([^>]*[^/])?>.*$/)) indent = 1;
     formatted += PADDING.repeat(pad) + node.trim() + "\n";
     pad += indent;
   });
-
   return formatted.trim();
 }
 
@@ -623,7 +556,6 @@ function scrollToXmlId(id) {
   const txt = els.xmlPretty.textContent || "";
   const idx = txt.indexOf(`spot id="${id}"`);
   if (idx < 0) return;
-
   const before = txt.slice(0, idx);
   const line = before.split("\n").length;
   const approxTop = Math.max(0, line - 6) * 18;
@@ -631,78 +563,31 @@ function scrollToXmlId(id) {
   els.xmlPretty.focus();
 }
 
-/* =======================
-   Fallback image
-   ======================= */
-
+/* Fallback Image */
 function makeFallbackDataUrl(title) {
-  const svg = `
-  <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="750" viewBox="0 0 1200 750">
-    <defs>
-      <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stop-color="#38bdf8" stop-opacity="0.35"/>
-        <stop offset="0.55" stop-color="#f472b6" stop-opacity="0.25"/>
-        <stop offset="1" stop-color="#34d399" stop-opacity="0.18"/>
-      </linearGradient>
-    </defs>
-    <rect width="1200" height="750" fill="url(#g)"/>
-    <rect x="55" y="55" width="1090" height="640" rx="28" fill="rgba(0,0,0,0.24)" stroke="rgba(255,255,255,0.22)"/>
-    <text x="600" y="370" text-anchor="middle" font-size="44" font-family="system-ui, -apple-system, Segoe UI, sans-serif" fill="rgba(255,255,255,0.92)" font-weight="700">
-      ${escapeXml(title)}
-    </text>
-    <text x="600" y="430" text-anchor="middle" font-size="20" font-family="system-ui, -apple-system, Segoe UI, sans-serif" fill="rgba(255,255,255,0.75)">
-      圖片載入失敗（已使用內建備援圖）
-    </text>
-  </svg>`;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="750" viewBox="0 0 1200 750"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#38bdf8" stop-opacity="0.35"/><stop offset="0.55" stop-color="#f472b6" stop-opacity="0.25"/><stop offset="1" stop-color="#34d399" stop-opacity="0.18"/></linearGradient></defs><rect width="1200" height="750" fill="url(#g)"/><rect x="55" y="55" width="1090" height="640" rx="28" fill="rgba(0,0,0,0.24)" stroke="rgba(255,255,255,0.22)"/><text x="600" y="370" text-anchor="middle" font-size="44" font-family="system-ui" fill="rgba(255,255,255,0.92)" font-weight="700">${escapeXml(title)}</text><text x="600" y="430" text-anchor="middle" font-size="20" font-family="system-ui" fill="rgba(255,255,255,0.75)">圖片載入失敗</text></svg>`;
   return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
 }
-
 function escapeXml(s) {
   return String(s).replace(/[<>&'"]/g, (c) => ({
-    "<": "&lt;",
-    ">": "&gt;",
-    "&": "&amp;",
-    "'": "&apos;",
-    "\"": "&quot;",
+    "<": "&lt;", ">": "&gt;", "&": "&amp;", "'": "&apos;", "\"": "&quot;",
   }[c]));
 }
 
-/* =======================
-   Copy helpers
-   ======================= */
-
 async function copyText(text) {
-  try {
-    await navigator.clipboard.writeText(text);
-    flashMeta("已複製到剪貼簿 ✅");
-  } catch {
-    const ta = document.createElement("textarea");
-    ta.value = text;
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand("copy");
-    ta.remove();
-    flashMeta("已複製到剪貼簿 ✅");
+  try { await navigator.clipboard.writeText(text); flashMeta("已複製 ✅"); }
+  catch {
+    const ta = document.createElement("textarea"); ta.value = text;
+    document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove();
+    flashMeta("已複製 ✅");
   }
 }
-
 function flashMeta(msg) {
   if (!els.resultMeta) return;
   const old = els.resultMeta.textContent;
   els.resultMeta.textContent = msg;
-  setTimeout(() => {
-    if (els.resultMeta) els.resultMeta.textContent = old || "";
-  }, 1200);
+  setTimeout(() => { if (els.resultMeta) els.resultMeta.textContent = old || ""; }, 1200);
 }
-
 function makeSpotText(s) {
-  return [
-    s.name,
-    `地點：${s.prefecture}（${s.region}）`,
-    `建成年：${s.establishedYear || "—"}｜時代：${s.era || "—"}`,
-    `亮點：${(s.highlights || []).join("；") || "—"}`,
-    `交通：${s.access || "—"}`,
-    `推薦季節：${s.bestTime || "—"}`,
-    `地圖：${s.map || "—"}`,
-  ].join("\n");
+  return [s.name, `地點：${s.prefecture}`, `亮點：${(s.highlights || []).join("；")}`].join("\n");
 }

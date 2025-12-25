@@ -27,10 +27,9 @@
           <span class="btn__text">主題</span>
         </button>
 
-        <!-- ✅ debug 模式才顯示（一般使用者看不到） -->
-        <button id="btnXml" class="btn btn--ghost" type="button" title="檢視原始資料（Debug）" hidden>
+        <button id="btnXml" class="btn btn--ghost" type="button" title="檢視原始 XML 資料">
           <span class="btn__icon" aria-hidden="true">🧾</span>
-          <span class="btn__text">資料</span>
+          <span class="btn__text">原始資料</span>
         </button>
       </nav>
     </div>
@@ -45,7 +44,6 @@
           幫你用最短時間挑出「最想去的那一個」。
         </p>
 
-        <!-- ✅ 工具列：移除「搜尋」，改成「景點速覽」 -->
         <div class="toolbar" role="region" aria-label="篩選與排序">
           <div class="field">
             <span class="field__label">景點速覽</span>
@@ -77,7 +75,6 @@
         </div>
       </div>
 
-      <!-- ✅ 右側卡片：旅行靈感（使用者導向） -->
       <aside class="hero__card" aria-label="旅行靈感與快速推薦">
         <div class="pill">Travel Guide</div>
         <h2 class="hero__cardTitle">不知道先去哪？用 10 秒找到你的那一站</h2>
@@ -85,7 +82,6 @@
           直接點選你今天想看的風格，我會幫你快速篩出最適合的景點。
         </p>
 
-        <!-- 這裡的 chips 會配合 script.js 做「快速篩選」 -->
         <div class="chips" role="group" aria-label="快速靈感選擇">
           <button class="chip" type="button" data-q="世界遺產">世界遺產</button>
           <button class="chip" type="button" data-q="鳥居隧道">鳥居隧道</button>
@@ -121,7 +117,6 @@
   <main id="main" class="container" role="main">
     <section aria-label="景點列表">
       <div class="grid" id="grid" aria-live="polite"></div>
-
     </section>
   </main>
 
@@ -139,7 +134,6 @@
     </div>
   </footer>
 
-  <!-- Details Modal -->
   <dialog class="modal" id="modalDetails" aria-label="景點詳細資訊">
     <form method="dialog" class="modal__frame">
       <button class="modal__close" value="close" aria-label="關閉">✕</button>
@@ -147,14 +141,13 @@
     </form>
   </dialog>
 
-  <!-- ✅ Debug XML Modal（預設不會開，除非 ?debug=1） -->
-  <dialog class="modal" id="modalXml" aria-label="原始資料檢視（Debug）">
+  <dialog class="modal" id="modalXml" aria-label="XML 原始資料檢視">
     <form method="dialog" class="modal__frame modal__frame--wide">
       <button class="modal__close" value="close" aria-label="關閉">✕</button>
       <div class="modal__body">
         <div class="modal__header">
-          <h3 class="modal__title">data.xml（Debug）</h3>
-          <p class="modal__sub">此視窗只在 debug 模式用來對照資料內容，一般使用者不會看到。</p>
+          <h3 class="modal__title">XML 原始資料來源</h3>
+          <p class="modal__sub">本頁面內容皆由以下 XML 檔案即時解析並渲染生成（Data Source）：</p>
         </div>
         <pre class="code" id="xmlPretty" tabindex="0"></pre>
       </div>
